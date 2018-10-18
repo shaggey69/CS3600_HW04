@@ -3,7 +3,7 @@ with open ("/etc/shadow") as f:
 
 for line in my_input:
 	word = line.spit(":")
-	if word[0] = "yourboss":
+	if word[0] == "yourboss":
 		boss_info  = word
 
 print(word)
